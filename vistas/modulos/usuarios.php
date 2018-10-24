@@ -1,0 +1,287 @@
+<div class="content-wrapper">
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Administrar usuarios</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item">
+              <i class="nav-icon fa fa-home"></i>
+              <a href="inicio">Inicio</a>
+            </li>
+            <li class="breadcrumb-item active">Administrar usuarios</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="content">
+    <div class="card">
+      <div class="card-header">
+        <button class="btn btn-outline-primary" data-toggle="modal" data-target="#modalAgregarUsuario"><i class="fal fa-user-plus"></i> Agregar</button>
+      </div>
+      <div class="card-body">
+        <table class="table table-bordered table-striped dt-responsive tablas" style="width: 100%;">
+          <!-- cabezara de la tabla -->
+          <thead>
+            <tr>
+              <th class="text-center" style="width: 10px;">#</th>
+              <th class="text-center">Foto</th>
+              <th class="text-center">Nombre</th>
+              <th class="text-center">Usuario</th>
+              <th class="text-center">Rol</th>
+              <th class="text-center">Estado</th>
+              <th class="text-center">Última sesion</th>
+              <th class="text-center">Acciones</th>
+            </tr>
+          </thead>
+          <!-- cuerpo de la tabla -->
+          <tbody>
+            <?php 
+              $item = null;
+              $valor = null;
+              $usuarios = ControladorUsuarios::ctrMostrarUsuarios($item, $valor);
+              foreach ($usuarios as $key => $value) {
+                echo 
+                ' <tr>
+                    <td class="text-center">
+                      ' . ($key + 1) . '
+                    </td>';
+                    if($value["foto"] != ""){
+                      echo 
+                      '<td class="text-center"><img src="' . $value["foto"] . '" class="img-thumbnail" width="40px"></td>';
+                    }else {
+                      echo 
+                      '<td class="text-center"><img src="vistas/images/usuarios/default/anonymous.png" class="img-thumbnail" width="40px"></td>';
+                    }
+                echo
+                '   <td class="text-center">
+                      ' . $value["nombre"] . '
+                    </td>
+                    <td class="text-center">
+                      ' . $value["usuario"] . '
+                    </td>
+                    <td class="text-center">
+                      ' . $value["perfil"] . '
+                    </td>';
+                    if ($value["estado"] != 0) {
+                      echo '<td class="text-center"><input type="checkbox" id="' . $value["id"] . '" class="toggle-button checkActivar"/><label for="' . $value["id"] . '" class="btnActivar" idUsuario="' . $value["id"] . '" estadoUsuario="0"></label></td>';
+                      echo '<script>
+                        $("#"+';
+                          echo $value["id"];
+                          echo ').attr("checked", true);
+                        </script>';
+                    } else {
+                      echo '<td class="text-center "><input type="checkbox" id="' . $value["id"] . '" class="toggle-button checkActivar"/><label for="' . $value["id"] . '" class="btnActivar" idUsuario="' . $value["id"] . '" estadoUsuario="1"></label></td>';
+                      echo '<script>
+                        $("#"+';
+                          echo $value["id"];
+                          echo ').attr("checked", false);
+                        </script>';
+                    }
+                echo
+                '   <td class="text-center">
+                      ' . $value["ultimo_login"] . '
+                    </td>
+                    <td class="text-center">
+                      <div class="btn-group">
+                        <button class="btn btn-outline-warning btnEditarUsuario" idUsuario="' . $value["id"] . '" data-toggle="modal" data-target="#modalEditarUsuario"><i class="fal fa-edit"></i></button>
+                        <button class="btn btn-outline-danger btnEliminarUsuario" idUsuario="' . $value["id"] . '" fotoUsuario="' . $value["foto"] . '" usuario="' . $value["usuario"] . '"><i class="fal fa-user-times"></i></button>
+                      </div>
+                    </td>
+                  </tr>
+                ';
+              }
+            ?>
+          </tbody>
+          <!-- pie de pagina tabla -->
+          <tfoot>
+           <tr>
+              <th class="text-center" style="width: 10px;">#</th>
+              <th class="text-center">Foto</th>
+              <th class="text-center">Nombre</th>
+              <th class="text-center">Usuario</th>
+              <th class="text-center">Rol</th>
+              <th class="text-center">Estado</th>
+              <th class="text-center">Última sesion</th>
+              <th class="text-center">Acciones</th>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </section>
+</div>
+<!--====================================================================
+=            Formulario modal para agregar un nuevo usuario            =
+=====================================================================-->
+<!-- The Modal -->
+<div class="modal fade" id="modalAgregarUsuario">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form role="form" method="post" enctype="multipart/form-data">
+        <!-- Modal Header -->
+        <div class="modal-header" style="background: rgba(52,58,64,.85); color: #d2d6de;">
+          <h4 class="modal-title">Agregar nuevo usuario</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <!-- Modal body -->
+        <div class="modal-body">
+          <!-- Nombre -->
+          <div class="input-group  has-feedback form-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text" style="background-color: #fff; border: 1px solid #ff; width: 42px; "><i class="fal fa-male"></i></span>
+            </div>
+            <input type="text" class="form-control input-group-lg" name="nuevoNombre" placeholder="Nombre:" required>
+          </div>
+          <!-- Nik mane (Usuario) -->
+          <div class="input-group  has-feedback form-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text" style="background-color: #fff; border: 1px solid #ff; width: 42px; "><i class="fal fa-user"></i></span>
+            </div>
+            <input type="text" class="form-control input-group-lg" id="nuevoUsuario" name="nuevoUsuario" placeholder="Usuario:" required>
+          </div>
+          <!-- Contraseña -->
+          <div class="input-group  has-feedback form-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text" style="background-color: #fff; border: 1px solid #ff; width: 42px; "><i class="fal fa-key"></i></span>
+            </div>
+            <input type="password" class="form-control input-group-lg" name="nuevoPassword" placeholder="Contraseña:" required>
+          </div>
+          <!-- Perfil o Rol -->
+          <div class="input-group  has-feedback form-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text" style="background-color: #fff; border: 1px solid #ff; width: 42px;"><i class="fal fa-clipboard-list"></i></span>
+            </div>
+            <select class="form-control" name="nuevoPerfil">
+              <option select disabled selected>Seleccione el perfil(rol del usuario):</option>
+              <option value="Administrador">Administrador</option>
+              <option value="Inventario">Inventario</option>
+              <option value="Mesero">Mesero</option>
+            </select>
+          </div>
+          <!-- Foto del usuario -->
+          <div class="card card-info collapsed-card card-outline">
+            <div class="card-header">
+              <h3 class="card-title"><i class="fal fa-camera-retro"></i> Subir foto</h3>
+              <div class="card-tools">
+                <button type="button" class="btn btn-tool foto" icono="angle-left" data-widget="collapse"><i class="fa fa-angle-left right icon"></i>
+                </button>
+              </div>
+              <!-- /.card-tools -->
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+              <input type="file" class="nuevaFoto" name="nuevaFoto">
+              <p class="h6"><small>Peso máximo de la foto 2 MB</small></p>
+              <img src="vistas/images/usuarios/default/anonymous.png" class="img-thumbnail previsualizar" width="120px">
+            </div>
+            <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+        </div>
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Salir</button>
+          <button type="submit" class="btn btn-outline-primary">Guardar usuario</button>
+        </div>
+        <?php
+$crearUsuario = new ControladorUsuarios();
+$crearUsuario->ctrCrearUsuario();
+?>
+      </form>
+    </div>
+  </div>
+</div>
+<!--====  End of Formulario modal para agregar un nuevo usuario  ====-->
+<!--====================================================================
+=            Formulario modal para editar un usuario                   =
+=====================================================================-->
+<!-- The Modal -->
+<div class="modal fade" id="modalEditarUsuario">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form role="form" method="post" enctype="multipart/form-data">
+        <!-- Modal Header -->
+        <div class="modal-header" style="background: rgba(52,58,64,.85); color: #d2d6de;">
+          <h4 class="modal-title">Editar usuario</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <!-- Modal body -->
+        <div class="modal-body">
+          <!-- Nombre -->
+          <div class="input-group  has-feedback form-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text text-center" style="background-color: #fff; border: 1px solid #ff; width: 42px; "><i class="fal fa-male"></i></span>
+            </div>
+            <input type="text" class="form-control input-group-lg" id="editarNombre" name="editarNombre" value="" required>
+          </div>
+          <!-- Nik mane (Usuario) -->
+          <div class="input-group  has-feedback form-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text text-center" style="background-color: #fff; border: 1px solid #ff; width: 42px; "><i class="fal fa-user"></i></span>
+            </div>
+            <input type="text" class="form-control input-group-lg" id="editarUsuario" name="editarUsuario" value="" readonly>
+          </div>
+          <!-- Contraseña -->
+          <div class="input-group  has-feedback form-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text text-center" style="background-color: #fff; border: 1px solid #ff; width: 42px; "><i class="fal fa-key"></i></span>
+            </div>
+            <input type="password" class="form-control input-group-lg" id="editarPassword" name="editarPassword" placeholder="Nueva contraseña:">
+            <input type="hidden" id="passwordActual" name="passwordActual">
+          </div>
+          <!-- Perfil o Rol -->
+          <div class="input-group  has-feedback form-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text text-center" style="background-color: #fff; border: 1px solid #ff; width: 42px;"><i class="fal fa-clipboard-list"></i></span>
+            </div>
+            <select class="form-control" name="editarPerfil">
+              <option id="editarPerfil"></option>
+              <option value="Administrador">Administrador</option>
+              <option value="Inventario">Inventario</option>
+              <option value="Mesero">Mesero</option>
+            </select>
+          </div>
+          <!-- Foto del usuario -->
+          <div class="card card-info collapsed-card card-outline">
+            <div class="card-header">
+              <h3 class="card-title"><i class="fal fa-camera-retro"></i> Subir foto</h3>
+              <div class="card-tools">
+                <button type="button" class="btn btn-tool foto" icono="angle-left" data-widget="collapse">
+                  <i class="fa fa-angle-left right icon"></i>
+                </button>
+              </div>
+              <!-- /.card-tools -->
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+              <input type="file" class="nuevaFoto" id="editarFoto" name="editarFoto">
+              <p class="h6"><small>Peso máximo de la foto 2 MB</small></p>
+              <img src="vistas/images/usuarios/default/anonymous.png" class="img-thumbnail previsualizar" width="120px">
+              <input type="hidden" name="fotoActual" id="fotoActual">
+            </div>
+            <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+        </div>
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Salir</button>
+          <button type="submit" class="btn btn-outline-primary">Editar usuario</button>
+        </div>
+        <?php
+$editarUsuario = new ControladorUsuarios();
+$editarUsuario->ctrEditarUsuario();
+?>
+      </form>
+    </div>
+  </div>
+</div>
+<!--====  End of Formulario modal editar un usuario  ====-->
+<?php
+$borrarUsuario = new ControladorUsuarios();
+$borrarUsuario->ctrBorrarUsuario();
+?>

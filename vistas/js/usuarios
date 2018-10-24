@@ -1,0 +1,583 @@
+/*=============================================
+CARGAR LA TABLA DINÁMICA
+=============================================*/
+var botonesTabla = '<div class="btn-group"><button class="btn btn-outline-warning btnEditarUsuario" idUsuario data-toggle="modal" data-target="#modalEditarUsuario"><i class="fal fa-edit"></i></button><button class="btn btn-outline-danger btnEliminarUsuario" idUsuario fotoUsuario usuario> <i class="fal fa-user-times"></i></button ></div>';
+
+if (window.matchMedia("(max-width:767px)").matches) {
+
+  var tableUsers = $('.tablaUsuarios').DataTable({
+
+    "ajax": "ajax/datatable-usuarios.ajax.php",
+    "columnDefs": [
+
+      {
+        "targets": -5,
+        "className": "uniqueClassName"
+      },
+
+      {
+        "targets": -7,
+        "data": null,
+        "defaultContent": '<img class="img-thumbnail imgTablaUsers" width="40px">',
+        "className": "uniqueClassName"
+
+      },
+
+      {
+        "targets": -6,
+        "className": "uniqueClassName"
+      },
+
+      {
+        "targets": -4,
+        "className": "uniqueClassName"
+      },
+
+
+      {
+        "targets": -3,
+        'render': function (data, type, row, meta) {
+          data = '<input type="checkbox" class="dt-checkboxes toggle-button checkActivar" id=""><label for="" class="btnActivar" idUsuario estadoUsuario></label>';
+          return data;
+        },
+        "className": "uniqueClassName"
+
+      },
+
+      {
+        "targets": -2,
+        "className": "uniqueClassName"
+      },
+
+      {
+        "targets": -1,
+        "data": null,
+        "defaultContent": botonesTabla,
+        "className": "uniqueClassName"
+
+      }
+
+    ],
+    "language": {
+
+      "sProcessing": "Procesando...",
+      "sLengthMenu": "Mostrar _MENU_ registros.",
+      "sZeroRecords": "No se encontraron resultados.",
+      "sEmptyTable": "No hay datos disponibles en la tabla.",
+      "sInfo": "Mostrar del _START_ al _END_ de un total de _TOTAL_",
+      "sInfoEmpty": "Mostrando 0 registros de un total de 0.",
+      "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+      "sInfoPostFix": "",
+      "search": "Buscar:",
+      "sSearchPlaceholder": "Buscar:",
+      "sUrl": "",
+      "sInfoThousands": ",",
+      "sLoadingRecords": "Cargando...",
+      "oPaginate": {
+        "sFirst": "Primero",
+        "sLast": "Último",
+        "sNext": "Siguiente",
+        "sPrevious": "Anterior"
+      },
+      "oAria": {
+        "sSortAscending": ": Odenar de manera ascendente",
+        "sSortDescending": ": Odenar de manera descendente"
+      }
+
+    },
+    "lengthMenu": [[5, 10, 20, 25, 50, -1], [5, 10, 20, 25, 50, "Todos"]],
+    "iDisplayLength": 5,
+
+
+  })
+
+} else {
+
+  var tableUsers = $('.tablaUsuarios').DataTable({
+
+    "ajax": "ajax/datatable-usuarios.ajax.php",
+    "columnDefs": [
+
+
+      {
+        "targets": -7,
+        "data": null,
+        "defaultContent": '<img class="img-thumbnail imgTablaUsers" width="40px">',
+        "className": "uniqueClassName"
+
+      },
+
+      {
+        "targets": -5,
+        "className": "uniqueClassName"
+      },
+
+      {
+        "targets": -6,
+        "className": "uniqueClassName"
+      },
+
+      {
+        "targets": -4,
+        "className": "uniqueClassName"
+
+      },
+
+      {
+        "targets": -3,
+        "data": null,
+        "defaultContent": '<input type="checkbox" id="" class="toggle-button checkActivar"/><label for="" class="btnActivar" idUsuario estadoUsuario></label>',
+        "className": "uniqueClassName"
+      },
+
+      {
+        "targets": -2,
+        "className": "uniqueClassName"
+      },
+
+      {
+        "targets": -1,
+        "data": null,
+        "defaultContent": botonesTabla,
+        "className": "uniqueClassName"
+
+      }
+
+    ],
+
+    "language": {
+
+      "sProcessing": "Procesando...",
+      "sLengthMenu": "Mostrar _MENU_ registros.",
+      "sZeroRecords": "No se encontraron resultados.",
+      "sEmptyTable": "No hay datos disponibles en la tabla.",
+      "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_",
+      "sInfoEmpty": "Mostrando 0 registros de un total de 0.",
+      "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+      "sInfoPostFix": "",
+      "search": "Buscar:",
+      "sSearchPlaceholder": "Buscar producto",
+      "sUrl": "",
+      "sInfoThousands": ",",
+      "sLoadingRecords": "Cargando...",
+      "oPaginate": {
+        "sFirst": "Primero",
+        "sLast": "Último",
+        "sNext": "Siguiente",
+        "sPrevious": "Anterior"
+      },
+      "oAria": {
+        "sSortAscending": ": Odenar de manera ascendente",
+        "sSortDescending": ": Odenar de manera descendente"
+      }
+
+    },
+    "lengthMenu": [[5, 10, 20, 25, 50, -1], [5, 10, 20, 25, 50, "Todos"]],
+    "iDisplayLength": 10,
+
+
+  })
+
+
+}
+
+/*=============================================
+ACTIVAR LOS BOTONES CON LOS ID CORRESPONDIENTES
+=============================================*/
+
+$('.tablaUsuarios tbody').on('click', 'button.btnEditarUsuario, button.btnEliminarUsuario', function () {
+
+  if (window.matchMedia("(min-width:992px)").matches) {
+
+    var data = tableUsers.row($(this).parents('tr')).data();
+  } else {
+
+    var data = tableUsers.row($(this).parents('tbody tr ul li')).data();
+  }
+
+  $(this).attr("idUsuario", data[7])
+  $(this).attr("fotoUsuario", data[1])
+  $(this).attr("usuario", data[3])
+
+});
+
+/*=============================================
+ACTIVAR ACTIVA EL BOTON ACTIVAR O DESACTIVA USUARIO
+=============================================*/
+
+// $('.tablaProductos tbody').on('click', 'button.btnActivar', function () {
+
+//   if (window.matchMedia("(min-width:992px)").matches) {
+
+//     var data = table.row($(this).parents('tr')).data();
+
+//   } else {
+
+//     var data = table.row($(this).parents('tbody tr ul li')).data();
+
+//   }
+  
+//   $(this).attr("idUsuario", data[7])
+//   $(this).attr("estadoUsuario", data[5])
+
+// });
+
+/*=============================================
+FUNCIÓN PARA CARGAR LAS IMÁGENES
+=============================================*/
+
+function cargarImagenesUsuarios() {
+
+  var imgTablaUsers = $(".imgTablaUsers");
+  
+  var checkActivar = $(".checkActivar");
+
+  var botonEstadoUsuario = $(".btnActivar");
+
+  for (var i = 0; i < imgTablaUsers.length; i++) {
+
+    var data = tableUsers.row($(imgTablaUsers[i]).parents("tr")).data();
+    console.log("data:", data);
+    $(imgTablaUsers[i]).attr("src", data[1]);
+
+    //agregamos el atrubuto id al checkbox y el atributo for al label
+    $(checkActivar[i]).attr("id", data[7]);
+
+    //console.log("checkActivar[" + i + "]", $(checkActivar[i]));
+    
+    
+    $(botonEstadoUsuario[i]).attr("for", data[7]);
+    //console.log("botonEstadoUsuario[" + i + "]", $(botonEstadoUsuario[i]));
+    
+    if (window.matchMedia("(max-width:767px)").matches) {
+
+      var checkboxActual = checkActivar[i];
+      var checkId = $(checkboxActual).attr("id");
+      console.log("var", $(this).parent().parent());
+      
+      console.log("id:", checkId);
+      if (data[5] == 1) {
+        $('#' + checkId).attr("checked", true);
+        $(botonEstadoUsuario[i]).attr("idUsuario", checkId);
+        $(botonEstadoUsuario[i]).attr("estadoUsuario", data[5]);
+      } else {
+        $('#' + checkId).attr("checked", false);
+        $(botonEstadoUsuario[i]).attr("idUsuario", checkId);
+        $(botonEstadoUsuario[i]).attr("estadoUsuario", data[5]);
+      }
+      
+    } else{
+
+      if (data[5] == 1) {
+
+        //$(botonEstadoUsuario[i]).addClass("btn-outline-success");
+        //console.log("checkActivarAntes[" + i + "]", $(checkActivar[i]).attr("checked"));
+        $(checkActivar[i]).attr("checked", "checked");
+        $(botonEstadoUsuario[i]).attr("idUsuario", data[7]);
+        $(botonEstadoUsuario[i]).attr("estadoUsuario", data[5]);
+        //console.log("checkActivarDespues[" + i + "]", $(checkActivar[i]).attr("checked"));
+        //$(botonEstadoUsuario[i]).html("Activo");
+
+      } else if (data[5] == 0) {
+
+        //$(botonEstadoUsuario[i]).addClass("btn-outline-danger");
+        $(checkActivar[i]).removeAttr("checked");
+        $(botonEstadoUsuario[i]).attr("idUsuario", data[7]);
+        $(botonEstadoUsuario[i]).attr("estadoUsuario", data[5]);
+        //console.log("checkActivar[" + i + "]", $(checkActivar[i]).attr("checked"));
+        //$(botonEstadoUsuario[i]).html("Inactivo");
+      }
+
+    }
+
+  }
+
+}
+
+/*=============================================
+CARGAMOS LAS IMÁGENES CUANDO ENTRAMOS A LA PÁGINA POR PRIMERA VEZ
+=============================================*/
+
+$('.tablaUsuarios').on('draw.dt', function () {
+
+  cargarImagenesUsuarios();
+
+})
+
+/*=============================================
+CARGAMOS LAS IMÁGENES CUANDO INTERACTUAMOS CON EL PAGINADOR
+=============================================*/
+
+$(".dataTables_paginate").click(function () {
+
+  cargarImagenesUsuarios();
+
+})
+
+/*=============================================
+CARGAMOS LAS IMÁGENES CUANDO INTERACTUAMOS CON EL BUSCADOR
+=============================================*/
+$("input[aria-controls='DataTables_Table_0']").focus(function () {
+
+  $(document).keyup(function (event) {
+
+    event.preventDefault();
+
+    cargarImagenesUsuarios();
+
+  })
+
+})
+
+/*=============================================
+CARGAMOS LAS IMÁGENES CUANDO INTERACTUAMOS CON EL FILTRO DE CANTIDAD
+=============================================*/
+
+$("select[name='DataTables_Table_0_length']").change(function () {
+
+  cargarImagenesUsuarios();
+
+})
+
+/*=============================================
+CARGAMOS LAS IMÁGENES CUANDO INTERACTUAMOS CON EL FILTRO DE ORDENAR
+=============================================*/
+
+$(".sorting").click(function () {
+
+  cargarImagenesUsuarios();
+
+})
+
+
+
+/*==================================================
+=            Subir foto del usuario                =
+==================================================*/
+$(".nuevaFoto").change(function(){
+
+	var imagen = this.files[0];
+	
+	/*=============================================
+  	VALIDAMOS EL FORMATO DE LA IMAGEN SEA JPG O PNG
+  	=============================================*/
+
+  	if(imagen["type"] != "image/jpeg" && imagen["type"] != "image/png"){
+
+  		$(".nuevaFoto").val("");
+
+  		 swal({
+		      title: "Error al subir la imagen",
+		      text: "¡La imagen debe estar en formato JPG o PNG!",
+		      type: "error",
+		      confirmButtonText: "¡Cerrar!"
+		    });
+
+  	}else if(imagen["size"] > 2000000){
+
+  		$(".nuevaFoto").val("");
+
+  		 swal({
+		      title: "Error al subir la imagen",
+		      text: "¡La imagen no debe pesar más de 2MB!",
+		      type: "error",
+		      confirmButtonText: "¡Cerrar!"
+		    });
+
+  	}else{
+
+  		var datosImagen = new FileReader;
+  		datosImagen.readAsDataURL(imagen);
+
+  		$(datosImagen).on("load", function(event){
+
+  			var rutaImagen = event.target.result;
+
+  			$(".previsualizar").attr("src", rutaImagen);
+
+  		})
+
+  	}
+})
+
+/*==================================================
+=            Editar usuario                        =
+==================================================*/
+$(".tablaUsuarios tbody").on("click", "button.btnEditarUsuario", function () {
+
+	var idUsuario = $(this).attr("idUsuario");
+	var datos = new FormData();
+	datos.append("idUsuario", idUsuario);
+
+	$.ajax({
+
+		url:"ajax/usuarios.ajax.php",
+		method: "POST",
+		data: datos,
+		cache: false,
+		contentType: false,
+		processData: false,
+		dataType: "json",
+		success: function(respuesta){
+			$("#editarNombre").val(respuesta["nombre"]);
+			$("#editarUsuario").val(respuesta["usuario"]);
+			$("#editarPerfil").html(respuesta["perfil"]);
+			$("#editarPerfil").val(respuesta["perfil"]);
+			$("#fotoActual").val(respuesta["foto"]);
+
+			$("#passwordActual").val(respuesta["password"]);
+
+			if(respuesta["foto"] != ""){
+
+				$(".previsualizar").attr("src", respuesta["foto"]);
+
+			}
+
+		}
+
+	});
+
+})
+
+/*==================================================
+=           Activar usuario                        =
+==================================================*/
+$(".tablaUsuarios tbody").on("click", ".btnActivar", function () {
+  if (window.matchMedia("(min-width:767px)").matches) {
+
+    var data = tableUsers.row($(this).parents('tr')).data();
+  } else {
+    var data = tableUsers.row($(this).parents('tbody tr ul li')).data();
+  }
+  
+  $(this).attr("idUsuario", data[7]);
+  var idUsuario = $(this).attr("idUsuario");
+  
+  var estadoUsuario = $(this).attr("estadoUsuario");
+  
+  if(estadoUsuario == 0){
+    estadoUsuario = Number(estadoUsuario + 1);
+  }
+  else{
+    estadoUsuario = Number(estadoUsuario * 0);
+  }
+  ;
+	var datos = new FormData();
+ 	datos.append("activarId", idUsuario);
+    datos.append("activarUsuario", estadoUsuario);
+    
+  	$.ajax({
+
+	  url:"ajax/usuarios.ajax.php",
+	  method: "POST",
+	  data: datos,
+	  cache: false,
+      contentType: false,
+      processData: false,
+      success: function(respuesta){
+
+      }
+
+  	})
+
+  	if(estadoUsuario == 0){
+
+      //$(this).removeClass('btn-outline-success');
+  		//$(this).addClass('btn-outline-danger');
+  		//$(this).html('Inactivo');
+  		$(this).attr('estadoUsuario',0);
+
+  	}else{
+
+  		//$(this).addClass('btn-outline-success');
+  		//$(this).removeClass('btn-outline-danger');
+  		//$(this).html('Activo');
+  		$(this).attr('estadoUsuario',1);
+
+  	}
+
+})
+
+/*==================================================================
+=            Revisar si el usuario esta registrado en la db         =
+===================================================================*/
+
+$("#nuevoUsuario").change(function(){
+
+	$(".alert").remove();
+
+	var usuario = $(this).val();
+
+	var datos = new FormData();
+	datos.append("validarUsuario", usuario);
+
+	 $.ajax({
+	    url:"ajax/usuarios.ajax.php",
+	    method:"POST",
+	    data: datos,
+	    cache: false,
+	    contentType: false,
+	    processData: false,
+	    dataType: "json",
+	    success:function(respuesta){
+	    	
+	    	if(respuesta){
+
+	    		$("#nuevoUsuario").parent().after(
+	    			'<div class="alert alert-warning"><i class="fa fa-exclamation-triangle"></i> Este usuario ya existe en la base de datos</div>');
+	    		$("#nuevoUsuario").val("");
+
+	    	}
+
+	    }
+
+	})
+})
+
+/*==================================================
+=           Eliminar usuario                       =
+==================================================*/
+$(".tablaUsuarios tbody").on("click", "button.btnEliminarUsuario", function () {
+
+  var idUsuario = $(this).attr("idUsuario");
+  var fotoUsuario = $(this).attr("fotoUsuario");
+  var usuario = $(this).attr("usuario");
+
+  swal({
+    title: '¿Está seguro de borrar el usuario?',
+    text: "¡Si no lo está puede cancelar la accíón!",
+    type: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      cancelButtonText: 'Cancelar',
+      confirmButtonText: 'Si, borrar usuario!'
+  }).then(function(result){
+
+    if(result.value){
+
+      window.location = "index.php?ruta=usuarios&idUsuario="+idUsuario+"&usuario="+usuario+"&fotoUsuario="+fotoUsuario;
+
+    }
+
+  })
+
+})
+
+// cambiar el icono del boton para expandir el div para agregar la foto del usuario
+$("button.foto").on("click", function () {
+  var icono = $(this).attr("icono");
+  if (icono == "angle-left") {
+    $(".icon").removeClass("fa-angle-left");
+    $(".icon").addClass("fa-angle-down");
+    $(this).attr("icono", "angle-down");
+  } else {
+    $(".icon").removeClass("fa-angle-down");
+    $(".icon").addClass("fa-angle-left");
+    $(this).attr("icono", "angle-left");
+  }
+})
+
+
+
+
